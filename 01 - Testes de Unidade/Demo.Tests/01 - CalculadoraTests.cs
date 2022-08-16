@@ -18,7 +18,7 @@ namespace Demo.Tests
             var resultado = calculadora.Somar(2, 2);
 
             // Assert
-            //Assert.True(resultado == 4);    // Não fica tão claro quanto o Equal() da linha abaixo
+            //Assert.True(condition: resultado == 4);    // Não fica tão claro quanto o Equal() da linha abaixo
             Assert.Equal(expected: 4, actual: resultado);
         }
 
