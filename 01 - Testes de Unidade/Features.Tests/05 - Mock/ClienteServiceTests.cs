@@ -43,14 +43,42 @@ namespace Features.Tests
         [Trait("Categoria", "Cliente Service Mock Tests")]
         public void ClienteService_Adicionar_DeveFalharDevidoClienteInvalido()
         {
+            // Arrange
+            var cliente = _clienteTestsBogus.GerarClienteInvalido();
+            var clienteRepo = new Mock<IClienteRepository>();
+            var mediatr = new Mock<IMediator>();
 
+            var clienteService = new ClienteService(clienteRepo.Object, mediatr.Object);
+
+            // Act
+            clienteService.Adicionar(cliente);
+
+            // Assert
+            Assert.False(cliente.EhValido());
+            clienteRepo.Verify(expression: r => r.Adicionar(cliente), times: Times.Never);
+            mediatr.Verify(expression: m => m.Publish(It.IsAny<INotification>(), CancellationToken.None), times: Times.Never);
         }
 
         [Fact(DisplayName = "Obter Clientes Ativos")]
         [Trait("Categoria", "Cliente Service Mock Tests")]
         public void ClienteService_ObterTodosAtivos_DeveRetornarApenasClientesAtivos()
         {
+            // Arrange
+            var clienteRepo = new Mock<IClienteRepository>();
+            var mediatr = new Mock<IMediator>();
 
+            clienteRepo.Setup(c => c.ObterTodos())
+                .Returns(_clienteTestsBogus.ObterClientesVariados());
+
+            var clienteService = new ClienteService(clienteRepo.Object, mediatr.Object);
+
+            // Act
+            var clientes = clienteService.ObterTodosAtivos();
+
+            // Assert
+            clienteRepo.Verify(expression: r => r.ObterTodos(), times: Times.Once);
+            Assert.True(condition: clientes.Any());
+            Assert.False(condition: clientes.Count(c => !c.Ativo) > 0);
         }
     }
 }
