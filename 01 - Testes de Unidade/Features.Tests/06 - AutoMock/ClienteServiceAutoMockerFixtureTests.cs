@@ -14,10 +14,12 @@ namespace Features.Tests
     public class ClienteServiceAutoMockerFixtureTests
     {
         readonly ClienteTestsAutoMockerFixture _clienteTestsAutoMockerFixture;
+        private readonly ClienteService _clienteService;
 
-        public ClienteServiceAutoMockerFixtureTests(ClienteTestsAutoMockerFixture clienteTestsBogus)
+        public ClienteServiceAutoMockerFixtureTests(ClienteTestsAutoMockerFixture clienteTestsFixture)
         {
-            _clienteTestsAutoMockerFixture = clienteTestsBogus;
+            _clienteTestsAutoMockerFixture = clienteTestsFixture;
+            _clienteService = _clienteTestsAutoMockerFixture.ObterClienteService();
         }
 
         [Fact(DisplayName = "Adicionar Cliente com Sucesso")]
@@ -26,10 +28,9 @@ namespace Features.Tests
         {
             // Arrange
             var cliente = _clienteTestsAutoMockerFixture.GerarClienteValido();
-            var clienteService = _clienteTestsAutoMockerFixture.ObterClienteService();
 
             // Act
-            clienteService.Adicionar(cliente);
+            _clienteService.Adicionar(cliente);
 
             // Assert
             Assert.True(cliente.EhValido());
@@ -43,10 +44,9 @@ namespace Features.Tests
         {
             // Arrange
             var cliente = _clienteTestsAutoMockerFixture.GerarClienteInvalido();
-            var clienteService = _clienteTestsAutoMockerFixture.ObterClienteService();
 
             // Act
-            clienteService.Adicionar(cliente);
+            _clienteService.Adicionar(cliente);
 
             // Assert
             Assert.False(cliente.EhValido());
@@ -59,13 +59,12 @@ namespace Features.Tests
         public void ClienteService_ObterTodosAtivos_DeveRetornarApenasClientesAtivos()
         {
             // Arrange
-            var clienteService = _clienteTestsAutoMockerFixture.ObterClienteService();
 
             _clienteTestsAutoMockerFixture.Mocker.GetMock<IClienteRepository>().Setup(c => c.ObterTodos())
                 .Returns(_clienteTestsAutoMockerFixture.ObterClientesVariados());
 
             // Act
-            var clientes = clienteService.ObterTodosAtivos();
+            var clientes = _clienteService.ObterTodosAtivos();
 
             // Assert
             _clienteTestsAutoMockerFixture.Mocker.GetMock<IClienteRepository>().Verify(expression: r => r.ObterTodos(), times: Times.Once);
