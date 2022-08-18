@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit.Abstractions;
 
 namespace Features.Tests
 {
@@ -11,10 +12,13 @@ namespace Features.Tests
     public class ClienteFluentAssertionTests
     {
         private readonly ClienteTestsAutoMockerFixture _clienteTestsFixture;
+        readonly ITestOutputHelper _outputHelper;
 
-        public ClienteFluentAssertionTests(ClienteTestsAutoMockerFixture clienteTestsFixture)
+        public ClienteFluentAssertionTests(ClienteTestsAutoMockerFixture clienteTestsFixture, 
+                                           ITestOutputHelper outputHelper)
         {
             _clienteTestsFixture = clienteTestsFixture;
+            _outputHelper = outputHelper;
         }
 
 
@@ -54,6 +58,8 @@ namespace Features.Tests
             // Assert
             result.Should().BeFalse();
             cliente.ValidationResult.Errors.Should().HaveCountGreaterThanOrEqualTo(expected: 1, because: "deve possuir erros de validação");
+
+            _outputHelper.WriteLine($"Foram encontrados {cliente.ValidationResult.Errors.Count} erros nesta validação");
         }
     }
 }
