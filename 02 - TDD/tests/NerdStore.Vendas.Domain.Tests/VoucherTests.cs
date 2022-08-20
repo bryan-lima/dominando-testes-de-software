@@ -43,5 +43,18 @@ namespace NerdStore.Vendas.Domain.Tests
             Assert.Contains(VoucherAplicavelValidation.UtilizadoErroMsg, result.Errors.Select(c => c.ErrorMessage));
             Assert.Contains(VoucherAplicavelValidation.ValorDescontoErroMsg, result.Errors.Select(c => c.ErrorMessage));
         }
+
+        [Fact(DisplayName = "Validar Voucher Porcentagem Válido")]
+        [Trait("Categoria", "Vendas - Voucher")]
+        public void Voucher_ValidarVoucherPorcentagem_DeveEstarValido()
+        {
+            var voucher = new Voucher("PROMO-15-OFF", 15, null, TipoDescontoVoucher.Porcentagem, 1, DateTime.Now.AddDays(15), true, false);
+
+            // Act
+            var result = voucher.ValidarSeAplicavel();
+
+            // Assert
+            Assert.True(result.IsValid);
+        }
     }
 }
