@@ -73,6 +73,7 @@ namespace NerdStore.Vendas.Domain
         public void AtualizarItem(PedidoItem pedidoItem)
         {
             ValidarPedidoItemInexistente(pedidoItem);
+            ValidarQuantidadeItemPermitida(pedidoItem);
 
             var itemExistente = PedidoItems.FirstOrDefault(p => p.ProdutoId == pedidoItem.ProdutoId);
 
