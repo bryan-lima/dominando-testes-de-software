@@ -67,12 +67,17 @@ namespace NerdStore.Vendas.Domain
             }
 
             _pedidoItems.Add(pedidoItem);
-            CalcularValorPedido();  
+            CalcularValorPedido();
         }
 
         public void AtualizarItem(PedidoItem pedidoItem)
         {
             ValidarPedidoItemInexistente(pedidoItem);
+
+            var itemExistente = PedidoItems.FirstOrDefault(p => p.ProdutoId == pedidoItem.ProdutoId);
+
+            _pedidoItems.Remove(itemExistente);
+            _pedidoItems.Add(pedidoItem);
         }
 
         public void TornarRascunho()
