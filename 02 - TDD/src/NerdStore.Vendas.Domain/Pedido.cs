@@ -65,6 +65,11 @@ namespace NerdStore.Vendas.Domain
             CalcularValorPedido();  
         }
 
+        public void AtualizarItem(PedidoItem pedidoItem)
+        {
+
+        }
+
         public void TornarRascunho()
         {
             PedidoStatus = PedidoStatus.Rascunho;
