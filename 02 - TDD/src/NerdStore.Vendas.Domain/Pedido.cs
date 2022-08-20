@@ -35,6 +35,11 @@ namespace NerdStore.Vendas.Domain
             return _pedidoItems.Any(p => p.ProdutoId == item.ProdutoId);
         }
 
+        private void ValidarPedidoItemInexistente(PedidoItem item)
+        {
+            if (!PedidoItemExistente(item)) throw new DomainException($"O item não pertence ao pedido");
+        }
+
         private void ValidarQuantidadeItemPermitida(PedidoItem item)
         {
             var quantidadeItens = item.Quantidade;
@@ -67,7 +72,7 @@ namespace NerdStore.Vendas.Domain
 
         public void AtualizarItem(PedidoItem pedidoItem)
         {
-            if (!PedidoItemExistente(pedidoItem)) throw new DomainException($"O item não existe no pedido");
+            ValidarPedidoItemInexistente(pedidoItem);
         }
 
         public void TornarRascunho()
