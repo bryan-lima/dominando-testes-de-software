@@ -22,13 +22,22 @@ namespace NerdStore.Vendas.Domain
         public Guid ClienteId { get; private set; }
         public decimal ValorTotal { get; private set; }
         public PedidoStatus PedidoStatus { get; private set; }
+        public bool VoucherUtilizado { get; private set; }
+        public Voucher Voucher { get; private set; }
 
         private readonly List<PedidoItem> _pedidoItems;
         public IReadOnlyCollection<PedidoItem> PedidoItems => _pedidoItems;
 
         public ValidationResult AplicarVoucher(Voucher voucher)
         {
-            return voucher.ValidarSeAplicavel();
+            var result = voucher.ValidarSeAplicavel();
+            if (!result.IsValid) return result;
+
+            Voucher = voucher;
+            VoucherUtilizado = true;
+
+
+            return result;
         }
 
         private void CalcularValorPedido()
