@@ -28,7 +28,7 @@ namespace NerdStore.Vendas.Domain
 
         public ValidationResult AplicarVoucher(Voucher voucher)
         {
-            return new ValidationResult();
+            return voucher.ValidarSeAplicavel();
         }
 
         private void CalcularValorPedido()
