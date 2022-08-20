@@ -36,6 +36,7 @@ namespace NerdStore.Vendas.Domain
             Voucher = voucher;
             VoucherUtilizado = true;
 
+            ValorTotal -= voucher.ValorDesconto.Value;
 
             return result;
         }
