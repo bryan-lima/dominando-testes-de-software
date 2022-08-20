@@ -95,4 +95,9 @@ namespace NerdStore.Vendas.Domain
             return Quantidade * ValorUnitario;
         }
     }
+
+    public class DomainException : Exception
+    {
+
+    }
 }
