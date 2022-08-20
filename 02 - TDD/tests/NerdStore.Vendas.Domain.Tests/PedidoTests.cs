@@ -58,5 +58,18 @@ namespace NerdStore.Vendas.Domain.Tests
             // Act & Assert
             Assert.Throws<DomainException>(() => pedido.AdicionarItem(pedidoItem));
         }
+
+        [Fact(DisplayName = "Adicionar Item Pedido Abaixo do Permitido")]
+        [Trait("Categoria", "Pedido Tests")]
+        public void AdicionarItemPedido_UnidadesItemAbaixoDoPermitido_DeveRetornarException()
+        {
+            // Arrange
+            var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
+            var produtoId = Guid.NewGuid();
+            var pedidoItem = new PedidoItem(produtoId, "Produto Teste", 0, 100);
+
+            // Act & Assert
+            Assert.Throws<DomainException>(() => pedido.AdicionarItem(pedidoItem));
+        }
     }
 }
