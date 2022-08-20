@@ -18,7 +18,7 @@ namespace NerdStore.Vendas.Domain
 
         public bool ValidarSeAplicavel()
         {
-            return false;
+            return true;
         }
     }
 }
