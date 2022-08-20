@@ -52,6 +52,10 @@ namespace NerdStore.Vendas.Domain
                     ValorTotal -= Voucher.ValorDesconto.Value;
                 }
             }
+            else
+            {
+                ValorTotal -= (ValorTotal * Voucher.PercentualDesconto.Value) / 100;
+            }
         }
 
         private void CalcularValorPedido()
