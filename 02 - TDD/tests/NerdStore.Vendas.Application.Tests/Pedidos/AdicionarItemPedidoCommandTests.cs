@@ -23,5 +23,24 @@ namespace NerdStore.Vendas.Application.Tests.Pedidos
             // Assert
             Assert.True(result);
         }
+
+        [Fact(DisplayName = "Adicionar Item Command Inválido")]
+        [Trait("Categoria", "Vendas - Pedido Commands")]
+        public void AdicionarItemPedidoCommand_CommandEstaInvalido_NaoDevePassarNaValidacao()
+        {
+            // Arrange
+            var pedidoCommand = new AdicionarItemPedidoCommand(Guid.Empty, Guid.Empty, "", 0, 0);
+
+            // Act
+            var result = pedidoCommand.EhValido();
+
+            // Assert
+            Assert.False(result);
+            Assert.Contains(AdicionarItemPedidoValidation.IdClienteErroMsg, pedidoCommand.ValidationResult.Errors.Select(c => c.ErrorMessage));
+            Assert.Contains(AdicionarItemPedidoValidation.IdProdutoErroMsg, pedidoCommand.ValidationResult.Errors.Select(c => c.ErrorMessage));
+            Assert.Contains(AdicionarItemPedidoValidation.NomeErroMsg, pedidoCommand.ValidationResult.Errors.Select(c => c.ErrorMessage));
+            Assert.Contains(AdicionarItemPedidoValidation.QtdMinErroMsg, pedidoCommand.ValidationResult.Errors.Select(c => c.ErrorMessage));
+            Assert.Contains(AdicionarItemPedidoValidation.ValorErroMsg, pedidoCommand.ValidationResult.Errors.Select(c => c.ErrorMessage));
+        }
     }
 }
