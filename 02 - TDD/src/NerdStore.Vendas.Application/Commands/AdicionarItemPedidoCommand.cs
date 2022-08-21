@@ -25,7 +25,7 @@ namespace NerdStore.Vendas.Application.Commands
 
         public bool EhValido()
         {
-            return false;
+            return true;
         }
     }
 }
