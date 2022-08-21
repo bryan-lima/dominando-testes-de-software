@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace NerdStore.Vendas.Application.Commands
 {
-    public class PedidoCommandHandler
+    public class PedidoCommandHandler : IRequestHandler<AdicionarItemPedidoCommand, bool>
     {
         private readonly IPedidoRepository _pedidoRepository;
         private readonly IMediator _mediator;
@@ -20,11 +20,15 @@ namespace NerdStore.Vendas.Application.Commands
             _mediator = mediator;
         }
 
-        public bool Handle(AdicionarItemPedidoCommand message)
+        public async Task<bool> Handle(AdicionarItemPedidoCommand message, CancellationToken cancellationToken)
         {
-            _pedidoRepository.Adicionar(Pedido.PedidoFactory.NovoPedidoRascunho(message.ClienteId));
-            _mediator.Publish(new PedidoItemAdicionadoEvent());
+            var pedidoItem = new PedidoItem(message.ProdutoId, message.Nome, message.Quantidade, message.ValorUnitario);
+            var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(message.ClienteId);
+            pedido.AdicionarItem(pedidoItem);
 
+            _pedidoRepository.Adicionar(pedido);
+
+            await _mediator.Publish(new PedidoItemAdicionadoEvent(pedido.ClienteId, pedido.Id, message.ProdutoId, message.Nome, message.ValorUnitario, message.Quantidade), cancellationToken);
             return true;
         }
     }
