@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using NerdStore.Core.DomainObjects;
+using NerdStore.Core.Messages;
 using NerdStore.Vendas.Application.Events;
 using NerdStore.Vendas.Domain;
 using System;
@@ -23,15 +24,7 @@ namespace NerdStore.Vendas.Application.Commands
 
         public async Task<bool> Handle(AdicionarItemPedidoCommand message, CancellationToken cancellationToken)
         {
-            if (!message.EhValido())
-            {
-                foreach (var error in message.ValidationResult.Errors)
-                {
-                    await _mediator.Publish(new DomainNotification(message.MessageType, error.ErrorMessage), cancellationToken);
-                }
-
-                return false;
-            }
+            if (!ValidarComando(message)) return false;
 
             var pedido = await _pedidoRepository.ObterPedidoRascunhoPorClienteId(message.ClienteId);
             var pedidoItem = new PedidoItem(message.ProdutoId, message.Nome, message.Quantidade, message.ValorUnitario);
@@ -63,6 +56,18 @@ namespace NerdStore.Vendas.Application.Commands
             pedido.AdicionarEvento(new PedidoItemAdicionadoEvent(pedido.ClienteId, pedido.Id, message.ProdutoId, message.Nome, message.ValorUnitario, message.Quantidade));
 
             return await _pedidoRepository.UnitOfWork.Commit();
+        }
+
+        private bool ValidarComando(Command message)
+        {
+            if (message.EhValido()) return true;
+
+            foreach (var error in message.ValidationResult.Errors)
+            {
+                _mediator.Publish(new DomainNotification(message.MessageType, error.ErrorMessage));
+            }
+
+            return false;
         }
     }
 }
