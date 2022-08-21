@@ -254,7 +254,7 @@ namespace NerdStore.Vendas.Domain.Tests
             Assert.Equal(valorTotalComDesconto, pedido.ValorTotal);
         }
 
-        [Fact(DisplayName = "Aplicar Vouher Excede Valor Total")]
+        [Fact(DisplayName = "Aplicar Voucher Excede Valor Total")]
         [Trait("Categoria", "Vendas - Pedido")]
         public void AplicarVoucher_DescontoExcedeValorTotalPedido_PedidoDeveTerValorZero()
         {
