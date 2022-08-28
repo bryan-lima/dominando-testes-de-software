@@ -1,92 +1,96 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NerdStore.Catalogo.Application.AutoMapper;
 using NerdStore.Catalogo.Data;
 using NerdStore.Vendas.Data;
 using NerdStore.WebApp.MVC.Data;
+using NerdStore.WebApp.MVC.Models;
 using NerdStore.WebApp.MVC.Setup;
 using System.Reflection;
+using System.Text;
 
 namespace NerdStore.WebApp.MVC
 {
-    public class StartupApiTests : IStartup
+    public class StartupApiTests
     {
         public IConfiguration Configuration { get; }
 
-        public StartupApiTests(IConfiguration configuration)
+        public StartupApiTests(IWebHostEnvironment webHostEnvironment)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(webHostEnvironment.ContentRootPath)
+                .AddJsonFile("appsettings.json", true, true)
+                .AddJsonFile($"appsettings.{webHostEnvironment.EnvironmentName}.json", true, true)
+                .AddEnvironmentVariables();
+
+            Configuration = builder.Build();
         }
 
+        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = Configuration.GetConnectionString("DefaultConnection");
-
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connectionString));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDbContext<CatalogoContext>(options =>
-                options.UseSqlServer(connectionString));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDbContext<VendasContext>(options =>
-                options.UseSqlServer(connectionString));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDatabaseDeveloperPageExceptionFilter();
+            services.AddDefaultIdentity<IdentityUser>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddControllersWithViews();
+            // JWT
 
-            services.AddSwaggerGen(c =>
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+
+            services.AddAuthentication(x =>
             {
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = true;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
                 {
-                    Description = "Insira o token JWT desta maneira: Bearer {seu token}",
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey
-                });
-
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        new string[] {}
-                    }
-                });
-
-                c.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Version = "v1",
-                    Title = "SoftLima API",
-                    Description = "SoftLima API",
-                    Contact = new OpenApiContact { Name = "softlima.com", Email = "contato@softlima.com", Url = new Uri("http://softlima.com") },
-                    License = new OpenApiLicense { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
-                });
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidAudience = appSettings.ValidoEm,
+                    ValidIssuer = appSettings.Emissor
+                };
             });
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddHttpContextAccessor();
 
             services.AddAutoMapper(typeof(DomainToViewModelMappingProfile), typeof(ViewModelToDomainMappingProfile));
 
-            services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddMediatR(typeof(Startup));
 
             services.RegisterServices();
         }
 
-        public void Configure(WebApplication app, IWebHostEnvironment environment)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            if (env.IsDevelopment())
             {
-                app.UseMigrationsEndPoint();
+                app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
             }
             else
             {
@@ -97,21 +101,15 @@ namespace NerdStore.WebApp.MVC
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
-            app.UseRouting();
+            app.UseCookiePolicy();
 
             app.UseAuthentication();
-            app.UseAuthorization();
 
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Vitrine}/{action=Index}/{id?}");
-            app.MapRazorPages();
-
-            app.UseSwagger();
-            app.UseSwaggerUI(s =>
+            app.UseMvc(routes =>
             {
-                s.SwaggerEndpoint("/swagger/v1/swagger.json", "SoftLima API v1.0");
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Vitrine}/{action=Index}/{id?}");
             });
         }
     }
