@@ -36,7 +36,10 @@ namespace NerdStore.WebApp.Tests.Config
         {
             var clienteOptions = new WebApplicationFactoryClientOptions
             {
-
+                AllowAutoRedirect = true,
+                BaseAddress = new Uri("http://localhost"),
+                HandleCookies = true,
+                MaxAutomaticRedirections = 7
             };
 
             Factory = new LojaAppFactory<TStartup>();
@@ -48,6 +51,28 @@ namespace NerdStore.WebApp.Tests.Config
             var faker = new Faker("pt_BR");
             UsuarioEmail = faker.Internet.Email().ToLower();
             UsuarioSenha = faker.Internet.Password(length: 8, memorable: false, regexPattern: "", prefix: "@1Ab_");
+        }
+
+        public async Task RealizarLoginWeb()
+        {
+            var initialResponse = await Client.GetAsync("/Identity/Account/Login");
+            initialResponse.EnsureSuccessStatusCode();
+
+            var antiForgeryToken = ObterAntiForgeryToken(await initialResponse.Content.ReadAsStringAsync());
+
+            var formData = new Dictionary<string, string>
+            {
+                { AntiForgeryFieldName, antiForgeryToken },
+                { "Input.Email", "teste@email.com" },
+                { "Input.Password", "Teste*123" },
+            };
+
+            var postRequest = new HttpRequestMessage(HttpMethod.Post, "/Identity/Account/Login")
+            {
+                Content = new FormUrlEncodedContent(formData)
+            };
+
+            await Client.SendAsync(postRequest);
         }
 
         public string ObterAntiForgeryToken(string htmlBody)
