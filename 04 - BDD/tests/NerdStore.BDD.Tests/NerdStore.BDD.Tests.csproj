@@ -24,4 +24,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Usuario\" />
+    <Folder Include="Pedido\" />
+  </ItemGroup>
+
 </Project>
