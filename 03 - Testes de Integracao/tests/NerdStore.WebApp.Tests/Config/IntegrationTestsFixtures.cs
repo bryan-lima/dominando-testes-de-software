@@ -11,18 +11,18 @@ using System.Threading.Tasks;
 namespace NerdStore.WebApp.Tests.Config
 {
     [CollectionDefinition(nameof(IntegrationWebTestsFixtureCollection))]
-    public class IntegrationWebTestsFixtureCollection : ICollectionFixture<IntegrationTestsFixtures<StartupWebTests>> 
+    public class IntegrationWebTestsFixtureCollection : ICollectionFixture<IntegrationTestsFixture<StartupWebTests>> 
     { 
 
     }
 
     [CollectionDefinition(nameof(IntegrationApiTestsFixtureCollection))]
-    public class IntegrationApiTestsFixtureCollection : ICollectionFixture<IntegrationTestsFixtures<StartupApiTests>>
+    public class IntegrationApiTestsFixtureCollection : ICollectionFixture<IntegrationTestsFixture<StartupApiTests>>
     {
 
     }
 
-    public class IntegrationTestsFixtures<TStartup> : IDisposable where TStartup : class
+    public class IntegrationTestsFixture<TStartup> : IDisposable where TStartup : class
     {
         public string AntiForgeryFieldName = "__RequestVerificationToken";
 
@@ -32,7 +32,7 @@ namespace NerdStore.WebApp.Tests.Config
         public readonly LojaAppFactory<TStartup> Factory;
         public HttpClient Client;
 
-        public IntegrationTestsFixtures()
+        public IntegrationTestsFixture()
         {
             var clienteOptions = new WebApplicationFactoryClientOptions
             {
