@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using NerdStore.Catalogo.Application.AutoMapper;
 using NerdStore.Catalogo.Data;
 using NerdStore.Vendas.Data;
@@ -15,9 +14,13 @@ namespace NerdStore.WebApp.MVC
     {
         public IConfiguration Configuration { get; }
 
-        public StartupWebTests(IConfiguration configuration)
+        public StartupWebTests(IWebHostEnvironment webHostEnvironment)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(webHostEnvironment.ContentRootPath)
+                .AddJsonFile("appsettings.json", true, true)
+                .AddJsonFile($"appsettings.{webHostEnvironment.EnvironmentName}.json", true, true)
+                .AddEnvironmentVariables();
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -38,41 +41,6 @@ namespace NerdStore.WebApp.MVC
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
-
-            services.AddSwaggerGen(c =>
-            {
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    Description = "Insira o token JWT desta maneira: Bearer {seu token}",
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey
-                });
-
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        new string[] {}
-                    }
-                });
-
-                c.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Version = "v1",
-                    Title = "SoftLima API",
-                    Description = "SoftLima API",
-                    Contact = new OpenApiContact { Name = "softlima.com", Email = "contato@softlima.com", Url = new Uri("http://softlima.com") },
-                    License = new OpenApiLicense { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
-                });
-            });
 
             services.AddAutoMapper(typeof(DomainToViewModelMappingProfile), typeof(ViewModelToDomainMappingProfile));
 
@@ -107,12 +75,6 @@ namespace NerdStore.WebApp.MVC
                 name: "default",
                 pattern: "{controller=Vitrine}/{action=Index}/{id?}");
             app.MapRazorPages();
-
-            app.UseSwagger();
-            app.UseSwaggerUI(s =>
-            {
-                s.SwaggerEndpoint("/swagger/v1/swagger.json", "SoftLima API v1.0");
-            });
         }
     }
 }
