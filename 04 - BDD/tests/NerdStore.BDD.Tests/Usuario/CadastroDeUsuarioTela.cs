@@ -40,5 +40,10 @@ namespace NerdStore.BDD.Tests.Usuario
             var botao = Helper.ObterElementoPorXPath("/html/body/div/main/div/div/form/button");
             botao.Click();
         }
+
+        public void ClicarNoLinkConfirmaConta()
+        {
+            Helper.ClicarLinkPorTexto("Click here to confirm your account");
+        }
     }
 }

@@ -12,8 +12,9 @@ E Preencher os dados do formulário
 		| Senha                |
 		| Confirmação da Senha |
 E Clicar no botão registrar
-Então Ele será redirecionado para a vitrine
-E Uma saudação com seu e-mail será exibida no menu superior
+E Ele será redirecionado para página de confirmação de conta
+E Clicar no link para confirmar conta
+Então Será exibido uma mensagem de conta confirmada
 
 Cenário: Cadastro com senha sem maiúsculas
 Dado Que o visitante está acessando o site da loja

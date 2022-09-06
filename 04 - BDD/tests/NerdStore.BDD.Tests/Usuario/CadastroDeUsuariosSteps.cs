@@ -89,5 +89,30 @@ namespace NerdStore.BDD.Tests.Usuario
         {
             Assert.True(_cadastroUsuarioTela.ValidarMensagemDeErroFormulario("Passwords must have at least one non alphanumeric character"));
         }
+
+        [When(@"Ele será redirecionado para página de confirmação de conta")]
+        public void WhenEleSeraRedirecionadoParaPaginaDeConfirmacaoDeConta()
+        {
+            Assert.Contains("/Identity/Account/RegisterConfirmation", _cadastroUsuarioTela.ObterUrl());
+        }
+
+        [When(@"Clicar no link para confirmar conta")]
+        public void WhenClicarNoLinkParaConfirmarConta()
+        {
+            // Act
+            _cadastroUsuarioTela.ClicarNoLinkConfirmaConta();
+
+            // Assert
+            Assert.Contains("Identity/Account/ConfirmEmail", _cadastroUsuarioTela.ObterUrl());
+        }
+
+        [Then(@"Será exibido uma mensagem de conta confirmada")]
+        public void ThenSeraExibidoUmaMensagemDeContaConfirmada()
+        {
+            var mensagem = _testsFixture.BrowserHelper.ObterElementoPorClasse("alert-success");
+
+            Assert.Contains("Thank you for confirming your email", mensagem.GetAttribute("innerText"));
+        }
+
     }
 }

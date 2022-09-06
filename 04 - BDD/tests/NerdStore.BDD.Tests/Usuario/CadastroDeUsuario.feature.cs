@@ -120,10 +120,13 @@ testRunner.And("Preencher os dados do formulário", ((string)(null)), table1, "E
 testRunner.And("Clicar no botão registrar", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "E ");
 #line hidden
 #line 15
-testRunner.Then("Ele será redirecionado para a vitrine", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Então ");
+testRunner.And("Ele será redirecionado para página de confirmação de conta", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "E ");
 #line hidden
 #line 16
-testRunner.And("Uma saudação com seu e-mail será exibida no menu superior", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "E ");
+testRunner.And("Clicar no link para confirmar conta", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "E ");
+#line hidden
+#line 17
+testRunner.Then("Será exibido uma mensagem de conta confirmada", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Então ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -137,7 +140,7 @@ testRunner.And("Uma saudação com seu e-mail será exibida no menu superior", (
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Cadastro com senha sem maiúsculas", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 18
+#line 19
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -147,10 +150,10 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 19
+#line 20
 testRunner.Given("Que o visitante está acessando o site da loja", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Dado ");
 #line hidden
-#line 20
+#line 21
 testRunner.When("Ele clicar em registrar", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Quando ");
 #line hidden
                 TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
@@ -161,13 +164,13 @@ testRunner.When("Ele clicar em registrar", ((string)(null)), ((TechTalk.SpecFlow
                             "Senha"});
                 table2.AddRow(new string[] {
                             "Confirmação da Senha"});
-#line 21
+#line 22
 testRunner.And("Preencher os dados do formulário com uma senha sem maiúsculas", ((string)(null)), table2, "E ");
 #line hidden
-#line 26
+#line 27
 testRunner.And("Clicar no botão registrar", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "E ");
 #line hidden
-#line 27
+#line 28
 testRunner.Then("Ele receberá uma mensagem de erro que a senha precisa conter uma letra maiúscula", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Então ");
 #line hidden
             }
@@ -182,7 +185,7 @@ testRunner.Then("Ele receberá uma mensagem de erro que a senha precisa conter u
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Cadastro com senha sem caractere especial", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 29
+#line 30
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -192,10 +195,10 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 30
+#line 31
 testRunner.Given("Que o visitante está acessando o site da loja", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Dado ");
 #line hidden
-#line 31
+#line 32
 testRunner.When("Ele clicar em registrar", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Quando ");
 #line hidden
                 TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
@@ -206,13 +209,13 @@ testRunner.When("Ele clicar em registrar", ((string)(null)), ((TechTalk.SpecFlow
                             "Senha"});
                 table3.AddRow(new string[] {
                             "Confirmação da Senha"});
-#line 32
+#line 33
 testRunner.And("Preencher os dados do formulário com uma senha sem caractere especial", ((string)(null)), table3, "E ");
 #line hidden
-#line 37
+#line 38
 testRunner.And("Clicar no botão registrar", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "E ");
 #line hidden
-#line 38
+#line 39
 testRunner.Then("Ele receberá uma mensagem de erro que a senha precisa conter um caractere especia" +
                         "l", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Então ");
 #line hidden
