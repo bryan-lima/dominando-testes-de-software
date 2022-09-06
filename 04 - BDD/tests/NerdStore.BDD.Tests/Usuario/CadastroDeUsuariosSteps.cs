@@ -51,25 +51,43 @@ namespace NerdStore.BDD.Tests.Usuario
         [When(@"Preencher os dados do formulário com uma senha sem maiúsculas")]
         public void WhenPreencherOsDadosDoFormularioComUmaSenhaSemMaiusculas(Table table)
         {
-            throw new PendingStepException();
+            // Arrange
+            _testsFixture.GerarDadosUsuario();
+            var usuario = _testsFixture.Usuario;
+            usuario.Senha = "teste*123";
+
+            // Act
+            _cadastroUsuarioTela.PreencherFormularioRegistro(usuario);
+
+            // Assert
+            Assert.True(_cadastroUsuarioTela.ValidarPreenchimentoFormularioRegistro(usuario));
         }
 
         [Then(@"Ele receberá uma mensagem de erro que a senha precisa conter uma letra maiúscula")]
         public void ThenEleReceberaUmaMensagemDeErroQueASenhaPrecisaConterUmaLetraMaiuscula()
         {
-            throw new PendingStepException();
+            Assert.True(_cadastroUsuarioTela.ValidarMensagemDeErroFormulario("Passwords must have at least one uppercase ('A'-'Z')"));
         }
 
         [When(@"Preencher os dados do formulário com uma senha sem caractere especial")]
         public void WhenPreencherOsDadosDoFormularioComUmaSenhaSemCaractereEspecial(Table table)
         {
-            throw new PendingStepException();
+            // Arrange
+            _testsFixture.GerarDadosUsuario();
+            var usuario = _testsFixture.Usuario;
+            usuario.Senha = "Teste123";
+
+            // Act
+            _cadastroUsuarioTela.PreencherFormularioRegistro(usuario);
+
+            // Assert
+            Assert.True(_cadastroUsuarioTela.ValidarPreenchimentoFormularioRegistro(usuario));
         }
 
         [Then(@"Ele receberá uma mensagem de erro que a senha precisa conter um caractere especial")]
         public void ThenEleReceberaUmaMensagemDeErroQueASenhaPrecisaConterUmCaractereEspecial()
         {
-            throw new PendingStepException();
+            Assert.True(_cadastroUsuarioTela.ValidarMensagemDeErroFormulario("Passwords must have at least one non alphanumeric character"));
         }
     }
 }
