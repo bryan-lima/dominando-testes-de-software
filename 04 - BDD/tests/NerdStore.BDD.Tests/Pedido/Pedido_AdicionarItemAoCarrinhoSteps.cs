@@ -112,31 +112,36 @@ namespace NerdStore.BDD.Tests.Pedido
         [Given(@"O mesmo produto já tenha sido adicionado ao carrinho anteriormente")]
         public void GivenOMesmoProdutoJaTenhaSidoAdicionadoAoCarrinhoAnteriormente()
         {
-            // Arrange
-
             // Act
+            _pedidoTela.NavegarParaCarrinhoDeCompras();
+            _pedidoTela.ZerarCarrinhoDeCompras();
+            _pedidoTela.AcessarVitrineDeProdutos();
+            _pedidoTela.ObterDetalhesProduto();
+            _pedidoTela.ClicarEmComprarAgora();
 
             // Assert
+            Assert.True(_pedidoTela.ValidarSeEstaNoCarrinhoDeCompras());
+
+            _pedidoTela.VoltarNavegacao();
         }
 
         [Then(@"A quantidade de itens daquele produto terá sido acrescida em uma unidade a mais")]
         public void ThenAQuantidadeDeItensDaqueleProdutoTeraSidoAcrescidaEmUmaUnidadeAMais()
         {
-            // Arrange
-
-            // Act
-
             // Assert
+            Assert.True(_pedidoTela.ObterQuantidadeDeItensPrimeiroProdutoCarrinho() > 1);
         }
 
         [Then(@"O valor total do pedido será a multiplicação da quantidade de itens pelo valor unitário")]
         public void ThenOValorTotalDoPedidoSeraAMultiplicacaoDaQuantidadeDeItensPeloValorUnitario()
         {
             // Arrange
-
-            // Act
+            var valorUnitario = _pedidoTela.ObterValorUnitarioProdutoCarrinho();
+            var valorCarrinho = _pedidoTela.ObterValorTotalCarrinho();
+            var quantidadeUnidades = _pedidoTela.ObterQuantidadeDeItensPrimeiroProdutoCarrinho();
 
             // Assert
+            Assert.Equal(valorUnitario * quantidadeUnidades, valorCarrinho);
         }
 
         [When(@"O usuário adicionar a quantidade máxima permitida ao carrinho")]
