@@ -162,8 +162,10 @@ namespace NerdStore.BDD.Tests.Pedido
         public void WhenOUsuarioAdicionarAQuantidadeMaximaPermitidaAoCarrinho()
         {
             // Arrange
+            _pedidoTela.ClicarAdicionarQuantidadeItens(Vendas.Domain.Pedido.MAX_UNIDADES_ITEM);
 
             // Act
+            _pedidoTela.ClicarEmComprarAgora();
 
             // Assert
         }

@@ -52,13 +52,13 @@ namespace NerdStore.BDD.Tests.Pedido
         public decimal ObterValorUnitarioProdutoCarrinho()
         {
             return Convert.ToDecimal(Helper.ObterTextoElementoPorId("valorUnitario")
-                .Replace("R$", " ").Trim());
+                .Replace("R$", string.Empty).Replace(",", string.Empty).Trim());
         }
 
         public decimal ObterValorTotalCarrinho()
         {
             return Convert.ToDecimal(Helper.ObterTextoElementoPorId("valorSubTotal")
-                .Replace("R$", " ").Trim());
+                .Replace("R$", string.Empty).Replace(",", string.Empty).Trim());
         }
 
         public void ClicarAdicionarQuantidadeItens(int quantidade)
