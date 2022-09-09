@@ -62,6 +62,20 @@ namespace NerdStore.BDD.Tests.Pedido
             Assert.True(_pedidoTela.ObterQuantidadeNoEstoque() > 0);
         }
 
+        [Given(@"Não tenha nenhum produto adicionado ao carrinho")]
+        public void GivenNaoTenhaNenhumProdutoAdicionadoAoCarrinho()
+        {
+            // Act
+            _pedidoTela.NavegarParaCarrinhoDeCompras();
+            _pedidoTela.ZerarCarrinhoDeCompras();
+
+            // Assert
+            Assert.Equal(0, _pedidoTela.ObterValorTotalCarrinho());
+
+            _pedidoTela.NavegarParaUrl(_urlProduto);
+        }
+
+
         [When(@"O usuário adicionar uma unidade ao carrinho")]
         public void WhenOUsuarioAdicionarUmaUnidadeAoCarrinho()
         {
