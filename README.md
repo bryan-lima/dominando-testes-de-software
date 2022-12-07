@@ -12,5 +12,5 @@ Projeto de estudos.
 dotnet vstest NomeProjeto.Tests.dll
 ```
 <h1 align="center"> 
-	<img alt="Exemplo de execução de testes via CLI" title="Exemplo de execução de testes via CLI"  src="https://raw.githubusercontent.com/bryan-lima/dominando-testes-de-software/master/.github/images/exemplo-execucao-testes-via-cli.png" width="100%">
+	<img alt="Exemplo de execução de testes via CLI" title="Exemplo de execução de testes via CLI"  src="./.github/images/exemplo-execucao-testes-via-cli.png" width="100%">
 </h1>
