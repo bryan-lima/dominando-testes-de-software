@@ -14,3 +14,8 @@ dotnet vstest NomeProjeto.Tests.dll
 <h1 align="center"> 
 	<img alt="Exemplo de execução de testes via CLI" title="Exemplo de execução de testes via CLI"  src="./.github/images/exemplo-execucao-testes-via-cli.png" width="100%">
 </h1>
+
+
+## Anotações
+
+Veja as anotações em **[TestesSoftware](./TestesSoftware.md)**
